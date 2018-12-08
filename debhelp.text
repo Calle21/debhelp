@@ -1,3 +1,5 @@
+$ example quit
+Example to demonstrate quit
 $ help
 Enter tags associated with your problem and hope for the best. Tags must be all lower case
 type 'Q' to quit
