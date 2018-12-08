@@ -28,7 +28,7 @@ main = do args <- map C.pack `fmap` getArgs
     where
     isTagLine :: C.ByteString -> Bool
     isTagLine s = C.take 2 s == C.pack "# "
-  loop help = do C.putStr (C.pack ">")
+  loop help = do C.putStr (C.pack "debhelp> ")
                  tagline <- C.getLine
                  if C.null tagline then return ()
                  else do let result = search (C.words tagline) help
