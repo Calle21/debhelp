@@ -4,16 +4,24 @@ A project to help people learn Debian. A help file contains entries with tags an
 
  # Syntax of help file
 
-A tag line begins with the dollar sign ($), followed by a series of words. The words must contain only lower case letters, and the words and the dollar sign must all be separated by exactly one space. After the tag line follows any number of lines containing text aimed to help the Debian newbie, or experienced user.
+A tag line begins with a hash sign (#), followed by a series of tags. The tags must not contain upper-case letters, and the tags and the dollar sign must all be separated by exactly one space. After the tag line follows any number of lines containing text aimed to help the Debian newbie, or experienced user.
 
  # Todo
 
-Fill the help file. Fix autumatic download from github.
+Fill the help file
+Get the helpfile to be in a global directory. "/usr/share" didn't work due to permissions. Currently using home folder to avoid that
 
  # Contribute
 
 New entries are added at the top of the help file. Just commit. Ah, I need to learn git
 
- # Important
+ # Installation
 
-The help file is stored at "/usr/share/debhelp.text". I have no idea if this is a good place to put it, but it was my best guess.
+1. Make sure you have wget installed
+2. Clone this repository
+3. cd into the newly created directory
+4. run "make -s"
+5. run "mv -i debhelp /usr/local/bin/debhelp" as root
+
+You can now enter the assistance tool by running "debhelp"
+

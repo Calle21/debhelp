@@ -2,16 +2,23 @@ module Main where
 
 import Control.Monad (liftM)
 import qualified Data.ByteString.Char8 as C
+import System.Directory (getHomeDirectory)
 import System.Environment (getArgs)
+import System.FilePath ((</>))
+import System.Process (callProcess)
 
 type Dictionary = [([C.ByteString],[C.ByteString])]
 
 main :: IO ()
-main = do args <- getArgs
-          if C.pack "update" `elem` map C.pack args
-          then undefined
+main = do args <- map C.pack `fmap` getArgs
+          if C.pack "update" `elem` args
+          then callProcess "/usr/local/bin/debhelp-update" []
           else return ()
-          loop =<< (order . C.lines) `fmap` C.readFile "/usr/share/debhelp.text"
+          if C.pack "help" `elem` args
+          then C.putStrLn (C.pack "Search 'help' to get help")
+          else return ()
+          homeDir <- getHomeDirectory
+          loop =<< (order . C.lines) `fmap` C.readFile (homeDir </> ".debhelp.text")
   where
   order :: [C.ByteString] -> Dictionary
   order []     = []
@@ -20,10 +27,10 @@ main = do args <- getArgs
                  in (tags,help) : order xs'
     where
     isTagLine :: C.ByteString -> Bool
-    isTagLine s = C.take 2 s == C.pack "$ "
-  loop help = do C.putStr (C.pack "Search: ")
+    isTagLine s = C.take 2 s == C.pack "# "
+  loop help = do C.putStr (C.pack ">")
                  tagline <- C.getLine
-                 if tagline == C.pack "quit" then return ()
+                 if C.null tagline then return ()
                  else do let result = search (C.words tagline) help
                          if null result then C.putStrLn (C.pack "Nothing found")
                                         else putHelp result
@@ -34,11 +41,11 @@ main = do args <- getArgs
     search tags (x:xs) = (if all (`elem` fst x) tags then [x] else []) ++ search tags xs
     putHelp :: Dictionary -> IO ()
     putHelp []     = return ()
-    putHelp (x:xs) = do C.putStr (C.pack "$ ")
+    putHelp (x:xs) = do putChar '#'
                         putTags (fst x)
                         mapM_ C.putStrLn (snd x)
                         putHelp xs
       where
       putTags []     = putChar '\n'
-      putTags (x:xs) = C.putStr x >> putChar ' ' >> putTags xs
+      putTags (x:xs) = putChar ' ' >> C.putStr x >> putTags xs
 

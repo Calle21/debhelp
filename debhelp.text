@@ -1,5 +1,5 @@
-$ example quit
-Example to demonstrate quit
-$ help
-Enter tags associated with your problem and hope for the best. Tags must be all lower case
+# autologin xfce4
+xfce4 uses lightdm-manager ...
+# help
+Enter tags associated with your problem and hope for the best. Do not use upper case letters
 An empty search quits the program
